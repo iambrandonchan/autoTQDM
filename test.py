@@ -1,4 +1,5 @@
 import time
+from tqdm import tqdm
 
 if __name__ == '__main__':
 	content = []
@@ -13,8 +14,10 @@ if __name__ == '__main__':
 	# for i in tqdm(range(0, 2000)):
 	# 	a = 1+1
 	# 	time.sleep(0.01)
-	for x in tqdm(range(10000), desc='yo'):
+	# x = [1,2,3]
+	# y = iter(x)
+	for x in range(10000):
 		a = 1
-		for y in tqdm(range(5)):
+		for y in range(5):
 			a = 2
-			b = [g for g in tqdm(range(55))]
+			b = [g for g in range(55)]

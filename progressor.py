@@ -7,7 +7,7 @@ def readLinesFromFile():
 		lines = f.read().split('\n')
 	return lines
 
-def addModuleTQDM(fileLines):
+def addTQDMModule(fileLines):
 
 	hasTQDMImport = False
 	tqdmImport = 'from tqdm import tqdm'
@@ -21,10 +21,30 @@ def addModuleTQDM(fileLines):
 	if not hasTQDMImport:
 		#need to insert the import statement
 		fileLines.insert(lastImportLine, tqdmImport)
+	return fileLines
+
+def addTQDMLines(fileLines):
+
+	for index, line in enumerate(fileLines):
+		if 'for' in line:
+			if 'tqdm' not in line:
+				# add tqdm wrapper
+				# print(line)
+				fileLines[index] = addTQDMWrapper(line)
 
 
-def ModifyFile(fileLines):
-	fileLines = addModuleTQDM(fileLines)
+
+	return fileLines
+
+def addTQDMWrapper(line):
+	print(line)
+
+	return line
+
+
+def addTQDM(fileLines):
+	fileLines = addTQDMModule(fileLines)
+	fileLines = addTQDMLines(fileLines)
 	return fileLines
 
 def writeLinesToFile(lines):
@@ -34,8 +54,6 @@ def writeLinesToFile(lines):
 if __name__ == '__main__':
 	fileLines = readLinesFromFile()
 
-	ModifyFile(fileLines)
-	writeLinesToFile(fileLines)
+	modifiedFile = addTQDM(fileLines)
+	writeLinesToFile(modifiedFile)
 
-	# for line in tqdm(range(0, len(fileLines))):
-	# 	print(fileLines[line])
