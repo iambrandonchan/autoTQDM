@@ -1,10 +1,41 @@
-if __name__ == '__main__':
-	content = []
+from tqdm import tqdm
+import time
+
+def readLinesFromFile():
+	lines = None
 	with open('test.py',"r") as f:
 		lines = f.read().split('\n')
-		print(lines)
-		for line in f:
-			content.append(line)
+	return lines
+
+def addModuleTQDM(fileLines):
+
+	hasTQDMImport = False
+	tqdmImport = 'from tqdm import tqdm'
+	lastImportLine = 0
+	for line in fileLines:
+		if tqdmImport in line:
+			hasTQDMImport = True
+			break
+		if 'import' in line:
+			lastImportLine += 1
+	if not hasTQDMImport:
+		#need to insert the import statement
+		fileLines.insert(lastImportLine, tqdmImport)
+
+
+def ModifyFile(fileLines):
+	fileLines = addModuleTQDM(fileLines)
+	return fileLines
+
+def writeLinesToFile(lines):
 	with open('test.py', 'w') as f:
-		f.write('\n'.join(['1'] + lines[1:]))
-	# print(content)
+		f.write('\n'.join(lines))
+
+if __name__ == '__main__':
+	fileLines = readLinesFromFile()
+
+	ModifyFile(fileLines)
+	writeLinesToFile(fileLines)
+
+	# for line in tqdm(range(0, len(fileLines))):
+	# 	print(fileLines[line])
