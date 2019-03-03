@@ -31,15 +31,26 @@ def addTQDMLines(fileLines):
 				# add tqdm wrapper
 				# print(line)
 				fileLines[index] = addTQDMWrapper(line)
+				print(fileLines[index])
+	# print(fileLines)
+	return fileLines
 
 
 
 	return fileLines
 
 def addTQDMWrapper(line):
-	print(line)
-
-	return line
+	# print(line.split())
+	# print(line)
+	startOfIterable = line.find('in') + 2
+	endOfIterable = line.find(':')
+	if endOfIterable != -1:
+		#is a list comprehension rip
+		# print(line[0:startOfIterable + 1] + 'tqdm(' + line[startOfIterable + 1:endOfIterable] + ')' + line[endOfIterable:])
+		tqdmLine = line[0:startOfIterable + 1] + 'tqdm(' + line[startOfIterable + 1:endOfIterable] + ')' + line[endOfIterable:]
+		return tqdmLine
+	else:
+		return line
 
 
 def addTQDM(fileLines):
