@@ -4,5 +4,6 @@ To do list:
 
 	-add functionality to make a copy of a file to run(don't want to add permanent changes)
 	-add functionality to maybe tqdm a file, run it, display results? then delete the file
+	-add functionality to only tqdm 1 level of for loops, not nested
 
-	-put this into a docker container for consistent environment
+	-add unit testing?
