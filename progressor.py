@@ -1,5 +1,7 @@
 from tqdm import tqdm
 import time
+import os
+
 
 def readLinesFromFile():
 	lines = None
@@ -67,4 +69,4 @@ if __name__ == '__main__':
 
 	modifiedFile = addTQDM(fileLines)
 	writeLinesToFile(modifiedFile)
-
+	a = os.system("python test.py")
