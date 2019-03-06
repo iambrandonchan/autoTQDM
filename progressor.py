@@ -40,7 +40,7 @@ def handleArguments(args):
 
 def readLinesFromFile():
 	lines = None
-	with open('test.py',"r") as f:
+	with open(args.f,"r") as f:
 		lines = f.read().split('\n')
 	return lines
 
@@ -66,10 +66,7 @@ def addTQDMLines(fileLines):
 		if 'for' in line:
 			if 'tqdm' not in line:
 				# add tqdm wrapper
-				# print(line)
 				fileLines[index] = addTQDMWrapper(line)
-				print(fileLines[index])
-	# print(fileLines)
 	return fileLines
 
 
@@ -112,5 +109,5 @@ if __name__ == '__main__':
 	modifiedFile = addTQDM(fileLines)
 	writeLinesToFile(modifiedFile, args)
 	if args.r:
-		print(args.f)
+		# print(args.f)
 		a = os.system("python " + args.f)
