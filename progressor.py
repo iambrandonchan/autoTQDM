@@ -4,8 +4,8 @@ import os
 import argparse
 import sys
 
+# retrieve arguments
 def _parse_args():
-
     parser = argparse.ArgumentParser(description='progressor.py')
     parser.add_argument('-f', type=str, default=None, help='file to add tqdm, is required')
     parser.add_argument('-p', action='store_true', help='permanently add tqdm to the specified file')
@@ -15,6 +15,7 @@ def _parse_args():
     args = parser.parse_args()
     return args
 
+# handles arguments on how add tqdm wrappers, and invalid arguments
 def handleArguments(args):
 	# kill the program if there is no such target file
 	if args.f == None:
@@ -33,19 +34,20 @@ def handleArguments(args):
 		elif args.r:
 			print('r')
 		else:
-			print('r')
-			args.r == True
+			args.c = True
 	return args
 
-
+# the file should exist, read the file and put the
+# lines into a list to return
 def readLinesFromFile():
 	lines = None
 	with open(args.f,"r") as f:
 		lines = f.read().split('\n')
 	return lines
 
+# reads the each line in the file, determines if and where
+# to include the tqdm import statement 
 def addTQDMModule(fileLines):
-
 	hasTQDMImport = False
 	tqdmImport = 'from tqdm import tqdm'
 	lastImportLine = 0
@@ -60,40 +62,34 @@ def addTQDMModule(fileLines):
 		fileLines.insert(lastImportLine, tqdmImport)
 	return fileLines
 
+# iterate through the file lines, add tqdm if applicable
 def addTQDMLines(fileLines):
-
 	for index, line in enumerate(fileLines):
 		if 'for' in line:
+			# add tqdm wrapper
 			if 'tqdm' not in line:
-				# add tqdm wrapper
 				fileLines[index] = addTQDMWrapper(line)
 	return fileLines
 
-
-
-	return fileLines
-
+# add tqdm wrapper to the line
+# need to determine start of the iterable, and end of iterable
 def addTQDMWrapper(line):
-	# print(line.split())
-	# print(line)
-	startOfIterable = line.find('in') + 2
+	startOfIterable = line.find(' in ') + 3
 	endOfIterable = line.find(':')
 	if endOfIterable != -1:
-		#is a list comprehension rip
-		# print(line[0:startOfIterable + 1] + 'tqdm(' + line[startOfIterable + 1:endOfIterable] + ')' + line[endOfIterable:])
 		tqdmLine = line[0:startOfIterable + 1] + 'tqdm(' + line[startOfIterable + 1:endOfIterable] + ')' + line[endOfIterable:]
 		return tqdmLine
 	else:
 		return line
-
 
 def addTQDM(fileLines):
 	fileLines = addTQDMModule(fileLines)
 	fileLines = addTQDMLines(fileLines)
 	return fileLines
 
-
+# write modified file out
 def writeLinesToFile(lines, args):
+	# we want a copy of the file
 	if args.c:
 		args.f = 'tqdm-' + args.f	
 	with open(args.f, 'w') as f:
@@ -101,6 +97,7 @@ def writeLinesToFile(lines, args):
 
 if __name__ == '__main__':
 
+	# get and handle arguments
 	args = _parse_args()
 	args = handleArguments(args)
 
@@ -108,6 +105,7 @@ if __name__ == '__main__':
 
 	modifiedFile = addTQDM(fileLines)
 	writeLinesToFile(modifiedFile, args)
+	
+	#optional run program
 	if args.r:
-		# print(args.f)
 		a = os.system("python " + args.f)
